@@ -32,14 +32,16 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" sizes="any" />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-950 relative overflow-hidden`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-950`}
       >
-        {children}
-        <Toaster theme="dark" />
-        <div className="bubbles">
-          {Array.from({ length: 15 }).map((_, i) => (
-            <div key={i} className="bubble"></div>
-          ))}
+        <div className="relative min-h-screen overflow-hidden">
+          {children}
+          <Toaster theme="dark" />
+          <div className="bubbles">
+            {Array.from({ length: 15 }).map((_, i) => (
+              <div key={i} className="bubble"></div>
+            ))}
+          </div>
         </div>
       </body>
     </html>
