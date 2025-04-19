@@ -1,36 +1,81 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Trading Growth Calculator
+
+A web application built with Next.js to help traders calculate potential growth, log trades, and track progress towards a profit target. It features dynamic calculations for account balance, P/L, distance to target, and suggests the required risk percentage for the next trade to reach the goal.
+
+![Screenshot](placeholder.png) <!-- Add a screenshot of your app here later! -->
+
+## Features
+
+*   **Configuration:** Set initial balance, profit target, default risk %, and default win multiplier (R:R).
+*   **Trade Logging:** Add, edit (risk %, win multiplier, outcome), and delete individual trades.
+*   **Dynamic Calculations:** Automatically calculates risk amount, floating P/L, account balance, distance to target for each trade.
+*   **Cumulative Tracking:** Shows total P/L and current account balance based on the trade log.
+*   **Suggested Risk:**
+    *   Displays the *current* suggested risk % needed (based on the current balance) to reach the target with one winning trade (using the default multiplier).
+    *   Displays the *required* suggested risk % for the *next* trade after each logged trade's outcome.
+*   **Persistence:** Settings and trade log are saved to local storage.
+*   **Responsive UI:** Adapts to different screen sizes.
+*   **Dark Theme:** Clean, modern dark interface.
+*   **Visual Flair:** Subtle floating bubble animation in the background.
+*   **Notifications:** Uses toasts for user feedback on actions.
+
+## Tech Stack
+
+*   **Framework:** [Next.js](https://nextjs.org/) (v15+)
+*   **Language:** [TypeScript](https://www.typescriptlang.org/)
+*   **UI:** [React](https://reactjs.org/) (v19+)
+*   **Styling:** [Tailwind CSS](https://tailwindcss.com/) (v4+)
+*   **Components:** [Shadcn/ui](https://ui.shadcn.com/) (Leveraging Radix UI primitives)
+*   **Animation:** [Framer Motion](https://www.framer.com/motion/)
+*   **State Management (Available):** [Zustand](https://zustand-demo.pmnd.rs/)
+*   **Icons:** [Lucide React](https://lucide.dev/)
+*   **Unique IDs:** [uuid](https://www.npmjs.com/package/uuid)
+*   **Notifications:** [Sonner](https://sonner.emilkowal.ski/)
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+*   Node.js (v18 or later recommended)
+*   npm or yarn
+
+### Installation & Running Locally
+
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/your-username/trading-calculator-next.git # Replace with your actual repo URL
+    cd trading-calculator-next
+    ```
+
+2.  **Install dependencies:**
+    ```bash
+    npm install
+    # or
+    # yarn install
+    ```
+
+3.  **Run the development server:**
+    ```bash
+    npm run dev
+    # or
+    # yarn dev
+    ```
+
+4.  Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
+
+### Building for Production
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+This will create an optimized production build in the `.next` folder.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Deployment
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The easiest way to deploy a Next.js application is using [Vercel](https://vercel.com/), the creators of Next.js.
 
-## Learn More
+## Contributing
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Contributions are welcome! Please feel free to open an issue or submit a pull request.
+(Add more specific contribution guidelines if needed).
