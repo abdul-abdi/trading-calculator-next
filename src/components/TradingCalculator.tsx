@@ -59,16 +59,21 @@ interface Trade {
   nextSuggestedRisk?: number; // Calculated: Risk % needed for the *next* trade to hit target
 }
 
-// Helper function to format currency
+// Helper function to format currency with one decimal place
 const formatCurrency = (amount: number): string => {
-    if (isNaN(amount)) return '$0.00';
-    return amount.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+    if (isNaN(amount)) return '$0.0';
+    return amount.toLocaleString('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 1,
+        maximumFractionDigits: 1,
+    });
 };
 
-// Helper function to format percentage precisely (for calculated risks)
+// Helper function to format percentage precisely with one decimal place
 const formatPercentagePrecise = (amount: number | undefined): string => {
     if (amount === undefined || isNaN(amount) || !isFinite(amount) || amount <= 0) return '-'; // Return dash if not applicable/calculable
-    return `${amount.toFixed(3)}%`;
+    return `${amount.toFixed(1)}%`; // Changed from toFixed(3)
 };
 
 const TradingCalculator: React.FC = () => {
@@ -164,18 +169,25 @@ const TradingCalculator: React.FC = () => {
    }, [initialBalance, profitTarget, defaultWinMultiplier, trades, recalculateTrades, setTrades, hasMounted]);
 
   const handleAddTrade = useCallback(() => {
-    const lastBalance = trades.length > 0 ? trades[trades.length - 1].accountBalance : initialBalance;
-    const currentRisk = calculateNextRisk(lastBalance, profitTarget, defaultWinMultiplier);
-    const riskToUse = (currentRisk !== undefined && currentRisk > 0 && currentRisk < 50) ? currentRisk : defaultRiskPercentage;
+    // No need to recalculate risk here, use the state variable `currentSuggestedRisk`
+
+    // Use currentSuggestedRisk if it's valid (>0 and finite), otherwise fallback to defaultRiskPercentage
+    const suggestedRisk = (currentSuggestedRisk !== undefined && currentSuggestedRisk > 0 && isFinite(currentSuggestedRisk))
+        ? currentSuggestedRisk
+        : defaultRiskPercentage;
+
+    // Round the risk to one decimal place before using it
+    const riskToUse = parseFloat(suggestedRisk.toFixed(1));
+
     const newTradeInput: Omit<Trade, 'tradeNumber' | 'accountSize' | 'riskAmount' | 'floatingPL' | 'accountBalance' | 'distanceToTarget' | 'nextSuggestedRisk'> = {
       id: uuidv4(),
-      riskPercentage: riskToUse,
+      riskPercentage: riskToUse, // Use the rounded risk
       outcome: 'pending',
       winMultiplier: defaultWinMultiplier,
     };
-    setTrades((prevTrades) => [...prevTrades, newTradeInput as Trade]);
+    setTrades((prevTrades) => [...prevTrades, newTradeInput as Trade]); // This triggers recalculation effect
     toast.success(`Trade #${trades.length + 1} added.`);
-  }, [trades, initialBalance, defaultRiskPercentage, defaultWinMultiplier, profitTarget, setTrades, calculateNextRisk]);
+  }, [trades, defaultRiskPercentage, defaultWinMultiplier, setTrades, currentSuggestedRisk]);
 
   const handleDeleteTrade = useCallback((id: string) => {
     setTrades((prevTrades) => prevTrades.filter((trade) => trade.id !== id));
@@ -197,11 +209,17 @@ const TradingCalculator: React.FC = () => {
   }, [setTrades]);
 
    const handleUpdateTradeValue = useCallback((id: string, field: 'riskPercentage' | 'winMultiplier', value: string) => {
-     const numericValue = parseFloat(value);
+     let numericValue = parseFloat(value);
      if (isNaN(numericValue) || numericValue < 0) {
        toast.error(`Invalid ${field === 'riskPercentage' ? 'Risk %' : 'Win Multiplier'} value.`);
        return;
      }
+
+     // Round numeric fields to one decimal place when updated
+     if (field === 'riskPercentage' || field === 'winMultiplier') {
+         numericValue = parseFloat(numericValue.toFixed(1));
+     }
+
      let valueChanged = false;
      setTrades((prevTrades) =>
          prevTrades.map(trade => {
@@ -404,7 +422,7 @@ const TradingCalculator: React.FC = () => {
                       <TableCell className="px-4 py-2.5">
                          <Input
                             type="number"
-                            step="0.01"
+                            step="0.1"
                             min="0"
                             value={trade.riskPercentage.toString()}
                             onChange={(e) => handleUpdateTradeValue(trade.id, 'riskPercentage', e.target.value)}
