@@ -245,7 +245,7 @@ const TradingCalculator: React.FC = () => {
         initial={{ opacity: 0, y: -30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        className="text-4xl font-bold text-center mb-8 bg-gradient-to-r from-blue-400 to-blue-600 text-transparent bg-clip-text"
+        className="text-3xl sm:text-4xl font-bold text-center mb-8 bg-gradient-to-r from-blue-400 to-blue-600 text-transparent bg-clip-text"
       >
         Trading Growth Calculator
       </motion.h1>
